@@ -1,0 +1,199 @@
+	<div class="container main" role="main">
+
+		<div class="title">
+			<h2>Review Your Results</h2>
+			<ul>
+				<li><strong>Student's Name:</strong><span ng-cloak>{{student.student_first_name + ' ' + student.student_last_name}}</span></li>
+				<li><strong>Grade Applying To:</strong><span ng-cloak>{{student.grade_applied_to}}</span></li>
+			</ul>
+		</div>
+		<div class="instructions">
+			<p>On this screen, you can view any offers that you may have received from any Non-Selective Enrollment or Selective Enrollment programs to which you applied. If you entered a Chicago address as the primary address on your application, the screen also shows the designated neighborhood school for that address. (Note that, upon registration at the school where you accept an offer, you are required to provide proof of the address on your application, as well as your current address, if you moved to another address after you submitted your application. Offers are contingent upon this proof.) If applicable, click ‘See status of all choices’ in order to view the status of all the programs on your application. </p>
+		</div>
+
+		<!-- <hr class="clear"></hr> -->
+		<!-- <button type="button" class="btn btn-info">View and Download Confirmation Letter</button> -->
+		<!-- <button type="button" class="btn btn-success">Accept this Offer</button> -->
+		<!-- <button type="button" class="btn btn-primary">Decline this Offer</button> -->
+		<!-- <button type="button" class="btn btn-warning">Warning</button> -->
+		<!-- <button type="button" class="btn btn-danger">Danger</button> -->
+		<!-- <button type="button" class="btn btn-link">Link</button> -->
+
+		<table class="table" ng-if="showNeighborhoodSchool()">
+			<tbody>
+				<tr class="nolabel">
+					<td class="full">
+						<h5>Neighborhood School</h5>
+						<p>If you entered a Chicago address as the primary address on your application, the section below shows the designated neighborhood school for that address. (Note that, upon registration at the school where you accept an offer, you are required to provide proof of the address on your application, as well as your current address, if you moved to another address after you submitted your application. Enrolling in the general education program at your neighborhood school is contingent upon this proof.) If your account has a street address outside of the city of Chicago, the section below is blank. Visit cps.edu/map to determine your designated neighborhood school once you have a Chicago address.</p>
+					</td>
+				</tr>
+				<tr class="light">
+					<td>
+						<strong>School Name - Program Name</strong>
+					</td>
+				</tr>
+				<tr class="highlight">
+					<td>
+						<strong>{{ student['stu_PRG__neighborhoodprogram::ProgramName'] }}</strong>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<table class="table" ng-if="hasContinuingOffer()">
+			<tbody>
+				<tr class="nolabel">
+					<td class="full">
+						<h5>Continuing High School</h5>
+						<p>If you are currently enrolled in eighth grade at school that also serves grades 9-12, this is considered a “Continuing School.” You will see this school below.</p>
+					</td>
+				</tr>
+				<tr class="light">
+					<td>
+						<strong>School Name - Program Name</strong>
+					</td>
+				</tr>
+				<tr class="highlight">
+					<td>
+						<strong>{{ student['stu_PRG__homeprogram::ProgramName'] }}</strong>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table class="table closed table-responsive">
+			<tbody>
+				<tr class="nolabel">
+					<td colspan="6" ng-class="{'full': ! hasNonSelectivePdf() }">
+						<div class="rel">
+							<h5>Non-Selective Enrollment</h5>
+							<p>If you received an offer from a Non-Selective Enrollment program on your application, you will see this program below, and you can click ‘See status of all choices’ in order to view the status of all the programs on your application. If you did not receive an offer, the status of all the programs on your application can be found below. If you applied to programs that select students through a points-based system, your child’s final points for each applicable program can be found on the notification letter. To view these points, click ‘View and Print Notification Letter.’ The letter also contains definitions of the waitlist categories. If you would like to receive your notification letter in Spanish, please contact the Office of Access and Enrollment at 773-553-2060 or <a href="mailto:gocps@cps.edu">gocps@cps.edu</a>. If you did not apply to any Non-Selective Enrollment programs, the section below is blank.</p>
+							<a ng-if="hasNonSelectivePdf()" ng-href="{{ nonSelectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">View and Print <br>Notification Letter </a>
+						</div>
+					</td>
+				</tr>
+				<tr class="light">
+					<td width="60">Rank</td>
+					<td>School Name - Program Name</td>
+					<td>Offer Status</td>
+					<td width="100">Category</td>
+					<td>Waitlist Number</td>
+					<td>Decision</td>
+				</tr>
+				<tr ng-class="offerHighlight(app)"
+                    ng-repeat="app in nonSelectiveApplications"
+                >
+					<td><div class="label">Rank</div>{{app.Choice_Rank_export }}</td>
+					<td><div class="label">School Name - Program Name</div>{{idToProgram[app.School_Program_Code_export].ProgramName}}</td>
+					<td><div class="label">Offer Status</div>{{app.OfferStatus}}</td>
+					<td><div class="label">Category</div>{{app.Queue_WaitList | na:app }}</td>
+					<td><div class="label">Waitlist Number</div>{{app.WaitListNumber | na:app }}</td>
+					<td><div class="label">Decision</div>{{app.AcceptanceStatus | na:app:true }}</td>
+				</tr>
+				<!--<tr class="hideshow">
+					<td>1</td>
+					<td>ALCOTT HS - General Education</td>
+					<td>Waitlist</td>
+					<td>General</td>
+					<td>157</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="hideshow">
+					<td>2</td>
+					<td>CURIE HS - Accounting</td>
+					<td>Waitlist</td>
+					<td>General</td>
+					<td>46</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="hideshow">
+					<td>3</td>
+					<td>CHICAGO TECH HS - STEM</td>
+					<td>Waitlist</td>
+					<td>General</td>
+					<td>72</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="highlight">
+					<td>4</td>
+					<td>Raby HS - Pre-Law</td>
+					<td>Offered</td>
+					<td><small>n/a</small></td>
+					<td><small>n/a</small></td>
+					<td></td>
+				</tr>
+				<tr class="hideshow">
+					<td>5</td>
+					<td>CLEMENTE HS - Health Sciences</td>
+					<td>Not Offered</td>
+					<td><small>n/a</small></td>
+					<td><small>n/a</small></td>
+					<td></td>
+				</tr>-->
+				<tr class="nolabel">
+					<td colspan="6" class="trigger"><span id="toggleNonSelective" data-toggletext="Close Status">See status of all choices</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table class="table closed">
+			<tbody>
+				<tr class="nolabel">
+					<td colspan="6" ng-class="{'full': ! hasSelectivePdf() }"> <!--FIX!!! Change to be based on whether or not there's a PDF-->
+						<div class="rel">
+							<h5>Selective Enrollment</h5>
+							<p>If you received an offer from a Selective Enrollment school on your application, you will see this school below and you can click ‘See status of all choices’ in order to view the status of all the programs on your application. If you did not receive an offer, the status of all the programs on your application can be found below. Your test scores can be found on the notification letter: click ‘View and Print Notification Letter.’ If you would like to receive your notification letter in Spanish, please contact the Office of Access and Enrollment at 773-553-2060 or <a href="mailto:gocps@cps.edu">gocps@cps.edu</a>. If you did not apply to any Selective Enrollment programs, the section below is blank.</p>
+							<a ng-if="hasSelectivePdf()" ng-href="{{ selectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">View and Print <br>Notification Letter </a>
+						</div>
+					</td>
+				</tr>
+				<tr class="light">
+					<td width="60">Rank</td>
+					<td width="50%">School Name - Program Name</td>
+					<td width="25%">Offer Status</td>
+					<td width="25%">Decision</td>
+				</tr>
+				<tr ng-class="offerHighlight(app)"
+                    ng-repeat="app in selectiveApplications"
+                >
+					<td><div class="label">Rank</div>{{app.Choice_Rank_export}}</td>
+					<td><div class="label">School Name - Program Name</div>{{idToProgram[app.School_Program_Code_export].ProgramName}}</td>
+					<td><div class="label">Offer Status</div>{{app.OfferStatus}}</td>
+					<td><div class="label">Decision</div>{{app.AcceptanceStatus | na:app:true}}</td>
+				</tr>
+				<!--<tr class="hideshow">
+					<td>1</td>
+					<td>NORTHSIDE PREP HS - Selective Enrollment</td>
+					<td>Not Offered</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="hideshow">
+					<td>2</td>
+					<td>PAYTON HS - Selective Enrollment</td>
+					<td>Not Offered</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="highlight">
+					<td>3</td>
+					<td>LANE TECH HS - Selective Enrollment</td>
+					<td>Offered</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="hideshow">
+					<td>4</td>
+					<td>YOUNG HS - Selective Enrollment</td>
+					<td>Not Offered</td>
+					<td><small>n/a</small></td>
+				</tr>-->
+				<tr class="nolabel">
+					<td colspan="6" class="trigger"><span id="toggleSelective" data-toggletext="Close Status">See status of all choices</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="pagination pull-right">
+			<a ng-click="navToSelect()" class="btn btn-lrg btn-success btn-lg pull-right">Make Decisions <br>on Offers and Waitlists</a>
+		</div>
+
+	</div>

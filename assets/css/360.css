@@ -1,0 +1,166 @@
+/*
+ ///////////////////////////////////////////////////////////////////////////
+ // GLOBAL STYLE
+ ///////////////////////////////////////////////////////////////////////////
+ */
+body {
+	font-family: "Century Gothic", Arial, sans-serif;
+	color: #58585a;
+}
+
+/*
+///////////////////////////////////////////////////////////////////////////
+// FANCY TABLE STUFF
+///////////////////////////////////////////////////////////////////////////
+*/
+
+table.ssb-fancy tbody {
+	border: 2px solid #818181;
+	border-radius: 8px; /* won't work for non-scrolling tables because border radius doesn't work for display:table. Your best bet is to make every table scrollable, and give the tbody a large max-height */
+}
+
+table.ssb-fancy tbody tr:nth-child(2n) td {
+	background-color: #e7e7e8; /* every other row gets a shaded background */
+}
+
+table.ssb-fancy, table.ssb-fancy tr, table.ssb-fancy th, table.ssb-fancy td {
+	border-collapse: collapse; /* adjacent cells share borders, necessary in order for border to not look wonky */
+}
+
+table.ssb-fancy th {
+	text-align: left;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+table.ssb-fancy th, table.ssb-fancy td {
+	padding: 10px; /* padding left/right needs to match for <th> and <td>, might as well use the same for top/bottom */
+}
+
+table.ssb-fancy tr td {
+	border-left: 2px solid #818181; /* border between data columns */
+}
+
+table.ssb-fancy tr td:first-child {
+	border-left: none; /* no border for first data column, that is taken care of by tbody border */
+}
+
+table.ssb-fancy tr td:last-child {
+	border-right: none; /* no border for last data column, that is taken care of by tbody border */
+}
+
+/*
+///////////////////////////////////////////////////////////////////////////
+// SCROLLABLE TABLE SUPPORT FOR ssb-scrollable
+///////////////////////////////////////////////////////////////////////////
+*/
+
+table.ssb-scrollable tbody {
+	display: block; /* needed to allow the tbody to scroll */
+	height: 250px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+table.ssb-scrollable thead, table.ssb-scrollable tbody tr {
+	display: table; /* each row is essentially its own table. So we need to specify widths for each column */
+	width: 100%; /* required to get header and data column widths to match up */
+	table-layout: fixed; /* even columns width, fix width of table too*/
+}
+
+table.ssb-scrollable td {
+	overflow: hidden; /* don't want one large cell messing things up, just truncate it with ellipsis */
+	text-overflow: ellipsis; /* show "..." if text is too long to fit in cell */
+}
+
+/*
+///////////////////////////////////////////////////////////////////////////
+// HARD-CODED CELL WIDTHS FOR "PEOPLE" TABLE
+///////////////////////////////////////////////////////////////////////////
+*/
+
+table.pending-offers td:nth-child(1), table.pending-offers th:nth-child(1) {
+	/*width: 100px;*/
+}
+
+table.pending-offers td:nth-child(2), table.pending-offers th:nth-child(2) {
+	/*width: 100px;*/
+}
+
+table.pending-offers td:nth-child(3), table.pending-offers th:nth-child(3) {
+	width: 130px;
+}
+
+table.pending-offers td:nth-child(4), table.pending-offers th:nth-child(4) {
+	/*width: 100px;*/
+}
+
+table.pending-offers td:nth-child(5), table.pending-offers th:nth-child(5) {
+	width: 80px; /* type */
+}
+
+table.pending-offers td:nth-child(6), table.pending-offers th:nth-child(6) {
+	/*width: 100px;*/
+}
+
+table.pending-offers td:nth-child(7), table.pending-offers th:nth-child(7) {
+	/*width: 100px;*/
+}
+
+table.all-applicants td:nth-child(5), table.all-applicants th:nth-child(5) {
+	width: 115px; /* birthdate */
+}
+
+/*
+///////////////////////////////////////////////////////////////////////////
+// PANEL SUPPORT
+///////////////////////////////////////////////////////////////////////////
+*/
+section.ssb-fancy {
+	border: 2px solid #818181;
+	border-radius: 8px; /* won't work for non-scrolling tables because border radius doesn't work for display:table. Your best bet is to make every table scrollable, and give the tbody a large max-height */
+	overflow: hidden; /* prevent corners of children from extending past the rounded borders */
+}
+
+section .section-header {
+	background-color: #e7e7e8;
+	margin: 0;
+	padding: 20px;
+}
+
+section .section-content {
+	margin: 20px;
+}
+
+/*
+///////////////////////////////////////////////////////////////////////////
+// MODAL CHANGES TO MATCH BOOTSTRAP MODALS WITH MOCKUP
+// The mockup dialogs are in <td> cells, which affects their styles
+// Angular dialogs are appended to the body, so they're not in the table cells
+// need to
+///////////////////////////////////////////////////////////////////////////
+*/
+
+.modal-title {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.modal-header h5 i:before {
+	margin-right: 12px;
+	font-size: 32px;
+	height: 3px;
+	color: #039;
+}
+
+/*
+///////////////////////////////////////////////////////////////////////////
+// RESPONSIVE TABLE TWEAKS
+///////////////////////////////////////////////////////////////////////////
+*/
+
+@media screen and (max-width: 767px) {
+	tr.responsive-list-body td:first-child {
+		border-top: 2px solid #818181 !important;
+	}
+}

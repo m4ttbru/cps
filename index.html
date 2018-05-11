@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width,initial-scale=1" name="viewport">
+	<title>Chicago Public Schools - Parent Portal</title>
+	<!-- <link href="assets/css/bootstrap.min.css" rel="stylesheet"> -->
+	<!-- <link rel="stylesheet" href="assets/css/font-awesome.css"> -->
+
+	<!-- build:css styles/main.css -->
+	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="assets/css/aux.css">
+	<link rel="stylesheet" href="assets/css/360.css">
+	<!-- endbuild -->
+</head>
+<body ng-app="waitlistAngularApp">
+
+<nav class="navbar cpsNavBar">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed navbarButton" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<i class="fa fa-bars" aria-hidden="true"></i>
+			</button>
+			<!-- <img class="pull-left" src="assets/images/cpslogo_v2@2x.png" width="144" alt="" title="" border="0" />  -->
+			<div class="navbar-brand hidden-xs navTitle">
+				<img src="assets/images/cpslogo_v2@2x.png">
+				<h4>GoCPS Online Application Site</h4>
+			</div>
+			<span class="navbar-brand visible-xs navTitleSmall">GoCPS</span>
+
+
+			<!--<a href="#" class="btn btn-secondary" id="btn-name">{{student.student_first_name.S + ' ' + student.student_last_name.S}}</a>
+			<a href="#" class="btn btn-secondary float-right" id="btn-language">Language: English</a>-->
+
+			<!-- From basecamp: HIDE: Language Selector: Jesse impleent code provided by Matt Due Feb 20
+			<nav id="lang-selector" class="nav navbar-nav navbar-right nav-btn">
+				<li class="dropdown nav-language-dropdown-item">
+					<a class="mobile-hidden dropdown-toggle" data-toggle="dropdown"> Language:&nbsp; English <b class="caret"></b> </a>
+					<a class="mobile-visible dropdown-toggle" data-toggle="dropdown"> <span class="fa fa-language"></span> </a>
+					<ul class="dropdown-menu language-selector" role="menu">
+						<li><a class="language-picker" data-lid="1">English</a></li>
+						<li><a class="language-picker" data-lid="2">Español</a></li>
+					</ul>
+				</li>
+			</nav>-->
+			<nav id="name-dropdown" class="nav navbar-nav navbar-right nav-btn">
+				<!--
+								<li class="dropdown nav-name-dropdown-item">
+									<a class="dropdown-toggle" data-toggle="dropdown" ng-cloak> <b class="caret"></b></a>
+									<ul class="dropdown-menu name-selector" role="menu">
+										<li><a class="" id="logout">Log Out</a></li>
+									</ul>
+								</li>
+				-->
+
+				<li class="btn-group" uib-dropdown is-open="status.isopen">
+					<a id="single-button" type="button" class="btn dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+						{{student.Parent_First_exp + ' ' + student.Parent_Last_exp}} <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+						<li><a ng-click="logout()" id="logout">Log Out</a></li>
+					</ul>
+				</li>
+			</nav>
+
+
+		</div>
+	</div>
+</nav>
+<section class="header">
+	<div class="container">
+		<div id="navbar" class="navbar-collapse collapse navTabs" aria-expanded="false">
+			<ul class="nav navbar-nav">
+				<li class="active"><a ng-href="{{ homeUrl }}">Home</a></li>
+				<li><a ng-href="{{ familyUrl }}">Family Profile</a></li>
+				<li><a ng-href="{{ accountUrl }}">Account Settings</a></li>
+			</ul>
+		</div>
+	</div>
+</section>
+
+<div class="container">
+	<div ng-view=""></div>
+</div>
+
+<!-- Javascript -->
+<!-- Do not put Bower stuff back in here without talking to Jesse first -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="vendorScripts/aws-sdk-2.217.1.min.js"></script>
+<script src="vendorScripts/bluebird.min.js"></script> <!--This is needed for IE 11-->
+<script src="vendorScripts/angular.min.js"></script>
+<script src="vendorScripts/angular-cookies.min.js"></script>
+<script src="vendorScripts/angular-route.min.js"></script>
+<!--<script src="vendorScripts/bootstrap.min.js"></script>-->
+<script src="vendorScripts/ui-bootstrap-tpls-2.5.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/velocity/1.2.1/velocity.min.js"></script>
+<script src="https://cdn.jsdelivr.net/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+<script>
+	AWS.config.setPromisesDependency(Promise); //This is needed to get AWS to use the Bluebird Promise library, since IE does not natively support promises
+	/*Do this in the HTML page to prevent it from happening on soft reloads*/
+	//AWS.config.credentials = new AWS.CognitoIdentityCredentials({IdentityPoolId: 'us-east-2:373b14d9-07b6-4171-8284-da871503e8fc'}, {region: 'us-east-2'}); //This anonymously loads the right IAM access policy
+	AWS.config = {accessKeyId: 'AKIAIAVVDPUR2RS427UA', secretAccessKey: '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', region: 'us-east-2'};
+</script>
+
+<!--<script src="assets/js/scripts.js"></script> Don't use Matt's JavaScript, instead copy and paste the parts we want into app.js -->
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/JsbUtils.js"></script>
+<!--<script src="scripts/DynamoUtils.js"></script>-->
+<script src="scripts/app.js"></script>
+<script src="scripts/controllers/parententry.js"></script>
+<script src="scripts/controllers/parentselect.js"></script>
+<script src="scripts/controllers/parentconfirm.js"></script>
+<script src="scripts/services/dynoclient.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>

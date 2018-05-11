@@ -1,0 +1,146 @@
+<div class="container main skiptables" role="main">
+
+	<div class="title">
+		<h2>Confirm Your Decisions</h2>
+		<ul>
+			<li><strong>Student's Name:</strong><span>{{student.student_first_name + ' ' + student.student_last_name}}</span></li>
+			<li><strong>Grade Applying To:</strong><span>{{student.grade_applied_to}}</span></li>
+		</ul>
+	</div>
+	<div class="instructions">
+		<p>This page displays all decisions that you have made regarding the offers you received and/or the programs where you were waitlisted, if applicable. To confirm these decisions, click ‘Accept’ below, enter your initials as indicated, and click ‘Submit. NOTE: If you DECLINE a Non-Selective Enrollment or Selective Enrolment offer, or WITHDRAW from a waitlist, you cannot go back and make any changes once you confirm these decisions and click ‘Submit’ on the following page.</p>
+	</div>
+	<!-- <hr class="clear"></hr> -->
+	<form class="form">
+		<table class="table">
+			<tbody>
+			<tr>
+				<td class="" colspan="6">
+					<div><strong>Accepted</strong></div>
+				</td>
+			</tr>
+			<tr class="accepted" ng-repeat="accepted in allAccepted()">
+				<td>
+					<strong>{{idToProgram[accepted.School_Program_Code_export].ProgramName}}</strong>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</form>
+
+	<table class="table">
+		<tbody>
+		<tr>
+			<td colspan="6" class="">
+				<strong class="danger">Declined</strong>
+			</td>
+		</tr>
+		<tr ng-repeat="declined in allDeclined()">
+			<td><strong>{{idToProgram[declined.School_Program_Code_export].ProgramName}}</strong></td>
+		</tr>
+		<!--<tr>
+			<td><strong>LANE TECH HS - Selective Enrollment</strong></td>
+		</tr>-->
+		</tbody>
+	</table>
+
+	<table class="table" ng-if="allWithdrawn().length > 0">
+		<tbody>
+		<tr>
+			<td colspan="6" class="">
+				<strong class="danger">Withdrawn from Waitlist</strong>
+			</td>
+		</tr>
+		<tr ng-repeat="withdrawn in allWithdrawn()">
+			<td><strong>{{idToProgram[withdrawn.School_Program_Code_export].ProgramName}}</strong></td>
+		</tr>
+		<!-- <tr>
+			<td><strong>PHILIPS HS - General Education</strong></td>
+		</tr> -->
+		</tbody>
+	</table>
+	<div class="container">
+		<h3>Affirmation Statement</h3>
+		<p>I affirm that all information provided on this form is true and accurate. I understand that if my decision is not submitted by the date and time indicated in the ‘Offer Expires’ column listed on the previous page, my child will forfeit the seat that he/she has been offered. I understand that once I submit my decision for my current offer, I cannot change that decision unless I receive a second-round offer or elect to enroll in the general education program of my neighborhood school. I understand that any student who gains admission to magnet schools based on a falsified application including, but not limited to, a falsified address, will be subject to immediate removal. I understand that any student who gains admission to Selective Enrollment schools based on a falsified application including, but not limited to, a falsified address, will be subject to immediate removal and permanently banned from attending all Selective Enrollment schools and programs.</p>
+	</div>
+	<div class="confirm">
+
+		<form name="myForm" class="form-inline needs-validation" id="confirm" novalidate ng-submit="openConfirmDialog()">
+			<div class="form-row">
+				<div class="col-md-2 ">
+					<div class="checkbox">
+						<input type="checkbox" name="affirm" value="accept_affirmation" id="accept_affirmation" ng-model="confirm" required="required" />
+						<label for="accept_affirmation"><span class="success">Accept</span></label>
+					</div>
+
+					<div ng-show="myForm.$submitted && myForm.affirm.$error.required">
+						<div class="invalid-feedback">You must accept the affirmation statement.</div>
+					</div>
+				</div>
+				<div class="col-md-8 ">
+					<div class="form-group">
+						<label for="name">Enter Parent/Guardian Name</label>
+						<input name="ParentName" type="text" class="form-control" id="name" placeholder="" ng-model="parentName" required="required">
+					</div>
+
+					<div ng-show="myForm.$submitted && myForm.ParentName.$error.required">
+						<div class="invalid-feedback">You must enter your name.</div>
+					</div>
+
+
+				</div>
+				<div class="col-md-2 ">
+					<span class="date" id="date">{{ todaysDate | date:'medium' }}</span>
+				</div>
+			</div>
+			<div class="form-row pull-right pagination">
+				<a ng-click="navToSelect()" id="btnprev" class="btn btn-default btn-lg pull-left">Back</a>
+				<!--<a id="confirm-submit" class="btn btn-success btn-lg pull-right" ng-click="openConfirmDialog()">Submit</a>-->
+				<input type="submit" id="confirm-submit" class="btn btn-success btn-lg pull-right" value="Submit" />
+				<!-- <input id="confirm" type="submit" value="Submit" class="btn btn-success btn-lg pull-right"> -->
+			</div>
+		</form>
+
+		<script type="text/ng-template" id="confirmDialog.html">
+			<div class="affirm modal-content">
+				<div class="modal-header">
+					<!-- <h5 class="modal-title" id="exampleModalLongTitle">Parent Information</h5> -->
+					<h4 class="success">Are you sure?</h4>
+					<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+					<!-- <span aria-hidden="true">&times;</span> -->
+
+				</div>
+				<div class="modal-body">
+					<p>By clicking ‘Submit’ you are accepting and/or declining the programs indicated, as well as withdrawing from any waitlists that are indicated. You will remain on any waitlists for programs where you did not withdraw. Note that if you  have a city of Chicago address, the general education program of your neighborhood school remains an option, should you decide at a later date that you want to enroll in that program.</p>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-success" style="width: 100%; margin-bottom: 10px" ng-click="ok()" ng-disabled="saving">Yes, I am confirming these decisions.</a>
+					<a class="btn btn-default" style="width: 100%; margin-bottom: 10px" ng-click="cancel()">Back to Previous Page</a>
+				</div>
+			</div>
+		</script>
+
+		<script type="text/ng-template" id="final.html">
+			<div class="modal-content">
+				<div class="modal-header">
+					<!-- <h4 class="success">Thank You</h4> -->
+					<h4 class="success">Thank you for submitting your decision for the 2018-2019 school year. This will confirm that your decision was successfully submitted.
+
+						For your records, please print this page or save it to a PDF to confirm your submission.
+					</h4>
+					<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+					<!-- <span aria-hidden="true">&times;</span> -->
+				</div>
+				<div class="modal-body">
+					<!--<p>You can now return to the Student Dashboard on the online application site and log out of your account, if you wish. </p>-->
+					<p>If you have any questions, please contact the Office of Access and Enrollment at (773) 553-2060.</p>
+				</div>
+				<div class="modal-footer">
+					<a href="javascript:window.print()" target="_blank" id="print" class="btn btn-default print"><i class="fa fa-print"></i>Print Confirmation</a>
+					<button ng-click="logout()" class="btn btn-primary">Log out</button>
+				</div>
+			</div>
+		</script>
+
+	</div>
+</div>

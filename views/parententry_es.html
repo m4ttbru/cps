@@ -1,0 +1,200 @@
+	<div class="container main" role="main">
+
+		<div class="title">
+			<h2>Revisa Tus Resultados</h2>
+			<ul>
+				<li><strong>Nombre del Estudiante:</strong><span ng-cloak>{{student.student_first_name + ' ' + student.student_last_name}}</span></li>
+				<li><strong>Solicitando al Grado:</strong><span ng-cloak>{{student.grade_applied_to}}</span></li>
+			</ul>
+		</div>
+		<div class="instructions">
+			<p>En esta pagina puedes ver las posibles ofertas de los programas de Matricula No Selectiva o de Matricula Selectiva a cual solicitaste. Si en tu solicitud ingresaste un domicilio principal en la ciudad de Chicago, esta pagina también muestra la escuela de vecindario para ese domicilio. (Ten en cuenta que, al inscribirte en la escuela que aceptes, tendrás que presentar un comprobante del domicilio en tu solicitud, así como tu domicilio actual si te mudaste después de haber presentado la solicitud. Las ofertas dependen de estos comprobantes. Si procede, haz clic en ‘Ver Estado de Todas Mis Elecciones’ para ver el estado de cada programa que seleccionaste en tu solicitud.</p>
+		</div>
+
+		<!-- <hr class="clear"></hr> -->
+		<!-- <button type="button" class="btn btn-info">View and Download Confirmation Letter</button> -->
+		<!-- <button type="button" class="btn btn-success">Accept this Offer</button> -->
+		<!-- <button type="button" class="btn btn-primary">Decline this Offer</button> -->
+		<!-- <button type="button" class="btn btn-warning">Warning</button> -->
+		<!-- <button type="button" class="btn btn-danger">Danger</button> -->
+		<!-- <button type="button" class="btn btn-link">Link</button> -->
+
+		<table class="table" ng-if="showNeighborhoodSchool()">
+			<tbody>
+				<tr class="nolabel">
+					<td class="full">
+						<h5>Escuela de Vecindario</h5>
+						<p>Si ingresaste un domicilio principal en la ciudad de Chicago, esta sección muestra tu escuela de vecindario para ese domicilio. (Ten en cuenta que, al inscribirte a la escuela que aceptes, tendrás que presentar un comprobante del domicilio en tu solicitud, así como tu domicilio actual si te mudaste después de haber presentado la solicitud. Tu matriculación en el programa de educación general en tu escuela de vecindario depende de estos comprobantes.) Si tu cuenta contiene un domicilio fuera de la ciudad de Chicago, esta sección se encuentra en blanco. Visita cps.edu/map para determinar tu escuela de vecindario cuando tengas un domicilio dentro de la ciudad de Chicago.</p>
+					</td>
+				</tr>
+				<tr class="light">
+					<td>
+						<strong>Nombre de Escuela - Nombre de Programa</strong>
+					</td>
+				</tr>
+				<tr class="highlight">
+					<td>
+						<strong>{{ student['stu_PRG__neighborhoodprogram::ProgramName'] }}</strong>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<table class="table" ng-if="hasContinuingOffer()">
+			<tbody>
+				<tr class="nolabel">
+					<td class="full">
+						<h5>Escuela Continua</h5>
+						<p>Si actualmente estas en el octavo grado y asistes una escuela que ofrece los grados 9 – 12, esta se considera una “Escuela Continua.” Verás esta escuela a continuación.</p>
+					</td>
+				</tr>
+				<tr class="light">
+					<td>
+						<strong>Nombre de Escuela - Nombre de Programa</strong>
+					</td>
+				</tr>
+				<tr class="highlight">
+					<td>
+						<strong>{{ student['stu_PRG__homeprogram::ProgramName'] }}</strong>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table class="table closed table-responsive">
+			<tbody>
+				<tr class="nolabel">
+					<td colspan="6" ng-class="{'full': ! hasNonSelectivePdf() }">
+						<div class="rel">
+							<h5>Matrícula No Selectiva</h5>
+							<p>Si recibiste una oferta de un programa de Matricula No Selectiva a cual solicitaste, veras este programa abajo. Puedes oprimir ‘Ver Estado de Todas Mis Elecciones’ para ver el estado de todas las escuelas en tu solicitud. Si no recibiste una oferta, el estado de todos los programas en tu solicitud se encuentran a continuación. Si solicitaste a programas que seleccionan a estudiantes a través de un sistema de puntos, tus puntuaciones finales para cada programa vigente se pueden encontrar en tu carta de notificación. Para ver estos puntos, oprime ‘Ver e Imprimir Carta de Notificación.’ Esta carta también contiene definiciones de las categorías de las listas de espera. Si deseas recibir esta carta de notificación en español, por favor comunícate con la Oficina de Acceso y Matrícula al 773-553-2060 o <a href="mailto:gocps@cps.edu">gocps@cps.edu</a>. Si no solicitaste a Secundarias No de Matricula Selectiva, esta sección se encuentra en blanco.
+</p>
+							<a ng-if="hasNonSelectivePdf()" ng-href="{{ nonSelectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">Ver e Imprimir <br>Carta de Notificación </a>
+						</div>
+					</td>
+				</tr>
+				<tr class="light">
+					<td width="60">Clasificación</td>
+					<td>Nombre de Escuela - Nombre de Programa</td>
+					<td>Estado de Oferta</td>
+					<td width="100">Categoría</td>
+					<td>Posición en Lista de Espera</td>
+					<td>Decisión</td>
+				</tr>
+				<tr ng-class="offerHighlight(app)"
+                    ng-repeat="app in nonSelectiveApplications"
+                >
+					<td><div class="label">Clasificación</div>{{app.Choice_Rank_export }}</td>
+					<td><div class="label">Nombre de Escuela - Nombre de Programa</div>{{idToProgram[app.School_Program_Code_export].ProgramName}}</td>
+					<td><div class="label">Estado de Oferta</div>{{app.OfferStatus}}</td>
+					<td><div class="label">Categoría</div>{{app.Queue_WaitList | na:app }}</td>
+					<td><div class="label">Posición en Lista de Espera</div>{{app.WaitListNumber | na:app }}</td>
+					<td><div class="label">Decisión</div>{{app.AcceptanceStatus | na:app:true }}</td>
+				</tr>
+				<!--<tr class="hideshow">
+					<td>1</td>
+					<td>ALCOTT HS - General Education</td>
+					<td>Waitlist</td>
+					<td>General</td>
+					<td>157</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="hideshow">
+					<td>2</td>
+					<td>CURIE HS - Accounting</td>
+					<td>Waitlist</td>
+					<td>General</td>
+					<td>46</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="hideshow">
+					<td>3</td>
+					<td>CHICAGO TECH HS - STEM</td>
+					<td>Waitlist</td>
+					<td>General</td>
+					<td>72</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="highlight">
+					<td>4</td>
+					<td>Raby HS - Pre-Law</td>
+					<td>Offered</td>
+					<td><small>n/a</small></td>
+					<td><small>n/a</small></td>
+					<td></td>
+				</tr>
+				<tr class="hideshow">
+					<td>5</td>
+					<td>CLEMENTE HS - Health Sciences</td>
+					<td>Not Offered</td>
+					<td><small>n/a</small></td>
+					<td><small>n/a</small></td>
+					<td></td>
+				</tr>-->
+				<tr class="nolabel">
+					<td colspan="6" class="trigger"><span id="toggleNonSelective" data-toggletext="Cerrar Estado">Ver Estado de Todas Mis Elecciones</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table class="table closed">
+			<tbody>
+				<tr class="nolabel">
+					<td colspan="6" ng-class="{'full': ! hasSelectivePdf() }"> <!--FIX!!! Change to be based on whether or not there's a PDF-->
+						<div class="rel">
+							<h5>Matricula Selectiva</h5>
+							<p>Si recibiste oferta de una de las Secundarias de Matricula Selectiva a cual solicitaste, veras el nombre de esta escuela abajo. Puedes oprimir ‘Ver Estado de Todas Mis Elecciones’ para revisar el estado de todos los programas en tu solicitud. Si no recibiste oferta, el estado de todos los programas en tu solicitud se encuentra a continuación. Los resultados de tu examen de admisión y puntos finales se encuentran en tu carta de notificación: oprime ‘Ver e Imprimir Carta de Notificación.’ Si deseas recibir esta carta de notificación en español, por favor comunícate con la Oficina de Acceso y Matrícula al 773-553-2060 o <a href="mailto:gocps@cps.edu">gocps@cps.edu</a>. Si no solicitaste a las Secundarias de Matricula Selectiva, esta sección se encuentra en blanco.</p>
+							<a ng-if="hasSelectivePdf()" ng-href="{{ selectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">Ver e Imprimir <br>Carta de Notificación </a>
+						</div>
+					</td>
+				</tr>
+				<tr class="light">
+					<td width="60">Clasificación</td>
+					<td width="50%">Nombre de Escuela - Nombre de Programa</td>
+					<td width="25%">Estado de Oferta</td>
+					<td width="25%">Decisión</td>
+				</tr>
+				<tr ng-class="offerHighlight(app)"
+                    ng-repeat="app in selectiveApplications"
+                >
+					<td><div class="label">Clasificación</div>{{app.Choice_Rank_export}}</td>
+					<td><div class="label">Nombre de Escuela - Nombre de Programa</div>{{idToProgram[app.School_Program_Code_export].ProgramName}}</td>
+					<td><div class="label">Estado de Oferta</div>{{app.OfferStatus}}</td>
+					<td><div class="label">Decisión</div>{{app.AcceptanceStatus | na:app:true}}</td>
+				</tr>
+				<!--<tr class="hideshow">
+					<td>1</td>
+					<td>NORTHSIDE PREP HS - Selective Enrollment</td>
+					<td>Not Offered</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="hideshow">
+					<td>2</td>
+					<td>PAYTON HS - Selective Enrollment</td>
+					<td>Not Offered</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="highlight">
+					<td>3</td>
+					<td>LANE TECH HS - Selective Enrollment</td>
+					<td>Offered</td>
+					<td><small>n/a</small></td>
+				</tr>
+				<tr class="hideshow">
+					<td>4</td>
+					<td>YOUNG HS - Selective Enrollment</td>
+					<td>Not Offered</td>
+					<td><small>n/a</small></td>
+				</tr>-->
+				<tr class="nolabel">
+					<td colspan="6" class="trigger"><span id="toggleSelective" data-toggletext="Cerrar Estado">Ver Estado de Todas Mis Elecciones</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="pagination pull-right">
+			<a ng-click="navToSelect()" class="btn btn-lrg btn-success btn-lg pull-right">Tomar Decisiones Sobre <br>Ofertas y Listas de Espera</a>
+		</div>
+
+	</div>

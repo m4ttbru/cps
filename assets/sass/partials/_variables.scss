@@ -1,0 +1,70 @@
+// colors ======================================
+
+$primary : #039;
+$secondary : #39b54a;
+$med        : #818181;
+$light : #e7e7e8;
+$dark : #3f3e40;
+$dark : #58585a;
+$red : red;
+$alert : #fcefa2;
+// $darkest    : #212121;
+
+// $pink : $primary;
+
+$primary-light : saturate(lighten($primary, 14), 15);
+$primary-lightest : $primary-light;
+$secondary-light : saturate(lighten($secondary, 8), 10);
+$alert-light : adjust_hue(saturate(lighten($alert, 4), 12), 5);
+$med-light : lighten($med, 15);
+$red-light : adjust_hue(saturate(lighten($red, 6), 38), 9);
+
+$bodybg   : #fff;
+$bodyfont : $dark;
+$headfont : $primary;
+
+// border size =======================================
+$btn-border-size : 4px;
+
+// border radii ======================================
+$br    : 0;
+$br-lg : 100px;
+
+// fonts ============================================
+
+$fonthead : 'Open Sans', sans-serif;
+$fontsans : 'Open Sans', sans-serif;
+$fontserif : 'PT Serif', serif;
+
+$bodyfontsize : 16px;
+
+// widths and heights ================================
+
+$contentwidth : 1400px;
+$header-height : 156px;
+$footer-height : 448px;
+
+$section-padding : 80px 0;
+
+// forms =============================================
+
+$field-text-color: $dark; 
+$field-label-color: $dark;
+$field-bg-color: #fff;
+$field-border-color: $primary;
+$field-focus-bg-color: #fff;
+$field-focus-border-color: $primary-light;
+
+// wp admin colors ===================================
+
+$base-color: $primary;
+$icon-color: #fff;
+$highlight-color: $primary-light;
+$notification-color: $alert;
+
+// icons =============================================
+
+$rarr : '\f054';
+$larr : '\f053';
+$check : '\f14a';
+

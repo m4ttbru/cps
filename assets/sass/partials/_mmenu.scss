@@ -1,0 +1,54 @@
+// mmenu - if needed
+.mmenu {
+	background-color: $dark;
+	border-right: 1px solid darken($dark,30);
+	height: 100vh;
+	// z-index: -1;
+	.mm-navbar .mm-btn:before, 
+	.mm-navbar .mm-btn:after,
+	.mm-header .mm-btn:before,
+	.mm-header .mm-btn:after,
+	.mm-listview > li > a.mm-prev:before, 
+	.mm-listview > li > a.mm-next:after {
+	  border-color: rgba(255, 255, 255, 0.5);
+	}
+}
+.mmenu:not(.mm-menu) {
+	display: none;
+}
+.mmenu-trigger {
+	display: none;
+	&:before {
+		display: inline-block;
+		font-size: 30px;
+		font-family: 'fontawesome';
+		content: '\f0c9';
+		font-weight: normal;
+		color: $primary;
+	}
+	@include breakpoint(xs) {
+		display: block;
+	}
+	@include breakpoint(ss) {
+	}
+}
+.mm-listview > li:last-of-type:after { display: none; }
+.mm-header .mm-btn,
+.mm-listview .mm-next { width: 100%; }
+
+.mm-menu .mm-navbar a, 
+.mm-menu .mm-navbar>*,
+.mm-listview>li>a, 
+.mm-listview>li>span {
+	color: $light;
+	font-family: $fonthead;
+	font-size: 16px;
+	text-transform: uppercase;
+}
+.mm-menu .mm-navbar>*, 
+.mm-menu .mm-navbar a.mm-title { 
+	color: $secondary; 
+	font-weight: 900; 
+}
+
+.mmenu+div nav.outer-nav { display: none; }

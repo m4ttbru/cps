@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width,initial-scale=1" name="viewport">
+	<title>Chicago Public Schools - Parent Portal</title>
+
+	<!-- build:css(.tmp) styles/main.css -->
+	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="assets/css/360.css">
+	<!--<link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.min.css">-->
+	<!-- endbuild -->
+	<style>
+		select:invalid {
+			color: gray;
+		}
+
+		table.ssb-fancy tbody tr td {
+			padding: 5px 7px !important;
+			border-radius: 0 !important;
+		}
+	</style>
+</head>
+<body ng-app="waitlistAdminApp" ng-controller="AdminMain">
+
+<!--<a ng-click="ssb()">SSB Test</a>-->
+
+<nav class="navbar cpsNavBar">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed navbarButton" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<i class="fa fa-bars" aria-hidden="true"></i>
+			</button>
+			<!-- <img class="pull-left" src="assets/images/cpslogo_v2@2x.png" width="144" alt="" title="" border="0" />  -->
+			<div class="navbar-brand hidden-xs navTitle">
+				<img src="assets/images/cpslogo_v2@2x.png">
+				<h4>GoCPS Online Application Site</h4>
+			</div>
+			<span class="navbar-brand visible-xs navTitleSmall">GoCPS</span>
+			<!--<a class="btn btn-secondary" id="btn-name"></a>-->
+
+			<!--
+						<nav id="name-dropdown" class="nav navbar-nav navbar-right nav-btn">
+							<li class="dropdown nav-name-dropdown-item">
+								<a class="dropdown-toggle" data-toggle="dropdown" ng-cloak> <b class="caret"></b></a>
+								<ul class="dropdown-menu name-selector" role="menu">
+									<li><a ng-click="logout()" class="" id="logout">Log Out</a></li>
+								</ul>
+							</li>
+						</nav>
+			-->
+
+			<nav id="name-dropdown" class="nav navbar-nav navbar-right nav-btn">
+				<li class="btn-group" uib-dropdown is-open="status.isopen" ng-if="adminUser">
+					<a id="single-button" type="button" class="btn dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+						{{ adminUser.first_name + ' ' + adminUser.last_name }} <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+						<li><a ng-click="logout()" id="logout">Log Out</a></li>
+					</ul>
+				</li>
+			</nav>
+
+
+			<!-- Removed language selector
+			<a class="btn btn-secondary float-right" id="btn-language">Language: English</a>-->
+		</div>
+	</div>
+</nav>
+<section class="header">
+	<div class="container">
+		<div id="navbar" class="navbar-collapse collapse navTabs" aria-expanded="false">
+			<ul class="nav navbar-nav">
+				<li class="active"><a ng-href="{{ homeUrl }}">Home</a></li>
+				<li><a ng-href="{{ familyUrl }}">Family Profile</a></li>
+				<li><a ng-href="{{ accountUrl }}">Account Settings</a></li>
+			</ul>
+		</div>
+	</div>
+</section>
+<div class="container main ng-cloak" role="main">
+
+	<div class="instructions">
+		<p>This portal is to be used by the designated application administrator (admin) for your school. Through this portal, the admin will see all students who have received an offer
+			to your school/programs and whether or not those students have accepted or declined an offer. In addition, this portal is used to manage the waitlists for each program.</p>
+	</div>
+
+
+	<table class="table only">
+		<thead>
+		<tr>
+			<th style="padding:10px">
+				<select required id="schoolSelection" class="form-control" style="width:inherit;" ng-model="selectedSchool" ng-options="eachSchool.SchoolName for eachSchool in schools">
+					<option value="" disabled>School</option>
+					<!--<option>Raby HS</option>
+					<option>Philips HS</option>
+					<option>Northside Prep HS</option>
+					<option>Payton HS</option>
+					<option>Lane Tech HS</option>
+					<option>Young HS</option>
+					<option>Taft HS</option>-->
+				</select>
+			</th>
+			<th style="padding:10px;width:100%;"> <!-- this grows to fill all available space, because the program name is variable and can get long -->
+				<select ng-disabled="!selectedSchool" required id="programName" title="Program name" class="form-control" ng-model="selectedProgram" ng-options="eachProgram.ProgramNameExtended for eachProgram in selectedSchool.programs"
+						ng-change="updateApplications()">
+					<option value="" disabled>Program</option>
+					<!--<option>Pre-Law</option>
+					<option>Entrepreneurship</option>
+					<option>Computer Science</option>-->
+				</select>
+			</th>
+			<th style="padding:10px">
+				<select required ng-disabled="!selectedProgram" id="gradeLevel" title="Grade level" class="form-control" style="width:inherit;" ng-model="selectedGrade" ng-options="eachGrade for eachGrade in selectedSchool.gradeChoices"
+						ng-change="updateApplications()">
+					<option value="" disabled>Grade</option>
+					<!--<option>9</option>
+					<option>10</option>
+					<option>11</option>
+					<option>12</option>-->
+				</select>
+			</th>
+		</tr>
+		</thead>
+	</table>
+
+	<div ng-if="!allApplications.length">
+		<!--<p ng-if="!searching">Choose search parameters above</p>-->
+		<p class="lead text-center" ng-if="searching">Loading&hellip;</p>
+	</div>
+	<div ng-if="allApplications.length">
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Pending Offers</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td colspan="8" class="full">
+					<p>This section shows students who can be extended an offer to your school/programs based on current space availability that you have provided to the Office of
+						Access and Enrollment. You will use this section to make offers and see when an offer has been issued.</p>
+				</td>
+			</tr>
+			<tr>
+				<td class="parent-cell no-border">
+					<table class="ssb-scrollable ssb-fancy pending-offers">
+						<thead>
+						<tr>
+							<th>Student Name</th>
+							<th>Queue</th>
+							<th>Offer Status</th>
+							<th>Offer Expires</th>
+							<th>Type</th>
+							<th>Application Status</th>
+							<th>Notes</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr ng-repeat="application in pendingOffers">
+							<td>{{ application.student.student_first_name + ' ' + application.student.student_last_name }}
+								<a ng-click="nameInfoDialog(application)" class="info"><i class="fa fa-info"></i></a>
+							</td>
+							<td>{{ application.Queue_Selections }}</td>
+							<td><a ng-click="makeOffer(application)" class="btn btn-primary full" ng-if="showMakeOffer( application )">Make Offer</a>
+								<div ng-if="! showMakeOffer( application )">{{ application.OfferStatus }}</div>
+							</td>
+							<td>{{ application.OfferExpires | date:'short' }}</td>
+							<td>
+								{{ application.Flag_IsPaper ? 'Paper' : 'Online' }}
+							</td>
+							<td>
+								<div ng-if="showAcceptDecline(application)">
+									<a class="btn btn-success" ng-click="accept(application)">Accept</a>
+									<a class="btn btn-default" ng-click="decline(application)">Decline</a>
+								</div>
+								<div ng-if="application.AcceptanceStatus && !showAcceptDecline(application)" class="text-center">
+									<span class="disabled">{{application.AcceptanceStatus}}</span>
+								</div>
+							</td>
+							<td>
+								<div ng-if="hasNotes(application)">
+									<a class="btn btn-primary full" ng-click="inspectNote(application)">View</a>
+								</div>
+								<div ng-if="!hasNotes(application)">
+									<a class="btn btn-default full" ng-click="editNote(application)">Add</a>
+								</div>
+
+
+							</td>
+						</tr>
+
+
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<table class="table">
+			<thead>
+			<tr>
+				<th width="15%">All Applicants</th>
+				<th>
+					<form class="form-inline">
+						<label for="search" class="">Search
+							<input id="search" name="search" type="search" class="search form-control" ng-model-options="{ debounce: 200 }" ng-model="tmp.searchText" placeholder="Search"></label> <!--Debounce makes searching more responsive by adding a slight delay before actually committing the value-->
+					</form>
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td colspan="8" class="full ">
+					<p>This section is used to view your school’s waitlist for each program. You will use this section to see if an offer has been extended, whether students have accepted or
+						declined an offer, and if students have withdrawn from the waitlist.</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="parent-cell no-border">
+					<table class="sortable ssb-scrollable ssb-fancy all-applicants">
+						<thead>
+						<tr>
+							<th>Student Name</th>
+							<th>Queue</th>
+							<th>Offer Status</th>
+							<th>Waitlist Number</th>
+							<th>Birthdate</th>
+							<th>Application Status</th>
+							<th>Expiration Time</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr ng-repeat="application in allApplications | filter: searchStudentsByName | orderBy:['student.student_last_name', 'student.student_first_name']">
+							<td>{{ application.student.student_first_name + ' ' + application.student.student_last_name }}<!-- {{ application.OfferStatus }}--></td>
+							<td>{{ application.Queue_Selections }}</td>
+							<td>{{ application.OfferStatus }}</td>
+							<td>{{ application.currentPosition }}</td>
+							<td>{{ application.student.Birthdate }}</td>
+							<td><strong ng-class="acceptanceClass( application )">{{ application.AcceptanceStatus }}</strong></td>
+							<td>{{ application.OfferExpires | date: 'short' }}</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<div class="clear">
+			<div class="col-md-8 npl">
+
+				<table class="table">
+					<thead>
+					<tr>
+						<th>All Offers</th>
+						<th>
+							<div class="pull-right">
+								<button type="button" ng-click="export()" ng-disabled="!allOffers.length" id="export_all_offers" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Export</button>
+							</div>
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td colspan="8" class="full ">
+							<p>This section shows all offers that have been extended to students for your school’s programs.</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" class="parent-cell no-border">
+							<table class="sortable ssb-scrollable ssb-fancy all-offers">
+								<thead>
+								<tr>
+									<th>Student Name</th>
+									<th>Queue</th>
+									<th>Application Status</th>
+									<th>Expiration Time</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="application in allOffers | orderBy:['student.student_last_name', 'student.student_first_name']">
+									<td>{{ application.student.student_first_name + ' ' + application.student.student_last_name }}</td>
+									<td>{{ application.Queue_Selections }}</td>
+									<td><strong ng-class="acceptanceClass( application )">{{ application.AcceptanceStatus }}</strong></td>
+									<td>{{ application.OfferExpires | date: 'short' }}</td>
+								</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div><!-- column -->
+			<div class="col-md-4 npr">
+
+				<table class="table" width="100%">
+					<thead>
+					<tr>
+						<th>Acceptance Summary</th>
+						<th></th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td colspan="8" class="full ">
+							<p>This section provides a summary of all students who have received and accepted a seat at your school/programs.</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" class="parent-cell no-border">
+							<table class="sortable">
+								<thead>
+								<tr>
+									<th>Queue</th>
+									<th>Totals</th>
+									<th>Seats Available</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td class="inner" colspan="8">
+
+										<div class="outline">
+											<table class="small">
+												<tr>
+													<td>General</td>
+													<td>6</td>
+													<td>0</td>
+												</tr>
+												<tr>
+													<td>Proximity</td>
+													<td>27</td>
+													<td>2</td>
+												</tr>
+												<tr>
+													<td>Teacher</td>
+													<td>2</td>
+													<td>9</td>
+												</tr>
+												<tr>
+													<td>General</td>
+													<td>55</td>
+													<td>2</td>
+												</tr>
+												<tr>
+													<td>Rank</td>
+													<td>86</td>
+													<td>1</td>
+												</tr>
+												<tr>
+													<td>Tier 4</td>
+													<td>30</td>
+													<td>0</td>
+												</tr>
+												<tr>
+													<td>Tier 3</td>
+													<td>22</td>
+													<td>1</td>
+												</tr>
+												<tr>
+													<td>Tier 2</td>
+													<td>2</td>
+													<td>9</td>
+												</tr>
+												<tr>
+													<td>Tier 1</td>
+													<td>30</td>
+													<td>0</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td><strong>187</strong></td>
+													<td><strong>18</strong></td>
+												</tr>
+											</table>
+										</div>
+										<div>Information Current as of {{ lastSyncCompletion | date:'medium' }}</div>
+
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+
+		</div><!-- clear -->
+	</div>
+</div>
+
+
+<script type="text/ng-template" id="modal-make-offer.html">
+	<div class="modal-header">
+		<h5 class="modal-title">Make Offer</h5>
+		<button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Are you sure you want to make an offer on this item?</p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-success" type="button" ng-click="$close()">Make Offer</button>
+		<button class="btn btn-default" type="button" ng-click="$dismiss()">Cancel</button>
+	</div>
+</script>
+
+<script type="text/ng-template" id="modal-name-info.html">
+	<div class="modal-header">
+		<h5 class="modal-title"><i class="fa fa-info-circle"></i> Parent Information</h5>
+		<button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>
+			Name: {{ application.student.Parent_First_exp + ' ' + application.student.Parent_Last_exp }}<br>
+			Primary phone: {{ application.student.Parent_Home_exp }}<br>
+			Secondary Phone: {{ application.student.Parent_Mobile_exp }}<br>
+			Email: <a href="mailto:{{ application.student.Parent_Email_exp }}">{{ application.student.Parent_Email_exp }}</a>
+		</p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" type="button" ng-click="$dismiss()">Close</button>
+	</div>
+</script>
+
+<script type="text/ng-template" id="modal-note-edit.html">
+	<form name="modalForm" role="form" ng-submit="$close(note)">
+		<div class="modal-header">
+			<h5 class="modal-title">Notes</h5>
+			<button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+
+			<ul>
+				<li ng-repeat="note in oldNotes">
+					<span>{{note.z_CreationTS | date : 'short'}}</span>
+					by <strong>{{note.Author || 'Unknown Author'}}</strong>: {{note.Note}}
+				</li>
+			</ul>
+
+			<div class="form-group">
+				<label class="control-label">Add Note</label>
+				<textarea ng-model="note.Note" class="form-control" name="body" cols="30" rows="10" title="Note Body" placeholder="Enter internal notes" required autofocus></textarea>
+			</div>
+			<!--
+						<div class="form-group" st-input="myForm.firstName">
+							<label class="control-label">Author Name</label>
+							<input class="form-control" name="author" required ng-model="note.Author" title="Author Name"/>
+						</div>
+			-->
+			<p ng-if="note.z_CreationTS">Created: {{note.z_CreationTS | date : 'medium'}}</p>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-success" type="submit">Submit Note</button>
+			<button class="btn btn-default" type="button" ng-click="$dismiss()">Close</button>
+		</div>
+	</form>
+</script>
+
+<!--
+<script type="text/ng-template" id="modal-note-view.html">
+	<form name="modalForm" role="form" ng-submit="$close(note)">
+		<div class="modal-header">
+			<h5 class="modal-title">View Note</h5>
+			<button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="form-group">
+				<label class="control-label">Note</label>
+				<textarea disabled ng-model="note.Note" class="form-control" name="body" cols="30" rows="10" title="Note Body" placeholder="Enter internal notes" required></textarea>
+			</div>
+			<p ng-if="note.z_CreationTS">Created: {{note.z_CreationTS | date : 'medium'}}</p>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-default" type="button" ng-click="$dismiss()">Close</button>
+		</div>
+	</form>
+</script>
+-->
+
+<script type="text/ng-template" id="modal-accept.html">
+	<div class="modal-header">
+		<h5 class="modal-title">Important</h5>
+		<button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Read the following language to the parent prior to clicking the YES button:</p>
+		<p class="main">By accepting this offer, you are declining any other offer that you previously accepted. If the student is waitlisted for any other programs, he/she will remain on those waitlists until
+			he/she receives an offer or withdraws from the waitlist. Are you sure you want to accept this offer?</p></div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" ng-click="$dismiss()">Take me Back</button>
+		<button type="button" class="btn btn-success" ng-click="$close(true)">Yes, I Would Like To Accept This Offer</button>
+	</div>
+</script>
+
+<script type="text/ng-template" id="modal-decline.html">
+	<div class="modal-header">
+		<h5 class="modal-title">Important</h5>
+		<button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Read the following language to the parent prior to clicking the DECLINE button:</p>
+		<p class="main">By declining this offer, this student will be removed from the waitlist for this program. If the student is waitlisted for any other programs, he/she will remain on those waitlists until he/she receives an offer or withdraws from the waitlist. Are you sure you want to decline this offer?</p></div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" ng-click="$dismiss()">Take me Back</button>
+		<button type="button" class="btn btn-warning" ng-click="$close(true)">Yes, I Would Like To <strong>Decline</strong> This Offer</button>
+	</div>
+</script>
+
+
+<!-- Javascript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<!--<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/angular-ui-select/dist/select.min.js"></script>-->
+<!-- endbower -->
+<!-- endbuild -->
+
+
+<script src="vendorScripts/aws-sdk-2.217.1.min.js"></script>
+<script src="vendorScripts/bluebird.min.js"></script> <!--This is needed for IE 11-->
+
+<script>
+	AWS.config.setPromisesDependency(Promise); //This is needed to get AWS to use the Bluebird Promise library, since IE does not natively support promises
+	/*Do this in the HTML page to prevent it from happening on soft reloads*/
+	//AWS.config.credentials = new AWS.CognitoIdentityCredentials({IdentityPoolId: 'us-east-2:373b14d9-07b6-4171-8284-da871503e8fc'}, {region: 'us-east-2'}); //This anonymously loads the right IAM access policy
+	AWS.config = {accessKeyId: 'AKIAIAVVDPUR2RS427UA', secretAccessKey: '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', region: 'us-east-2'};
+</script>
+
+<script src="vendorScripts/angular.min.js"></script>
+<script src="vendorScripts/angular-cookies.min.js"></script>
+<!--<script src="scripts/angular-route.min.js"></script>
+<script src="scripts/angular-animate.min.js"></script>
+<script src="scripts/angular-cookies.min.js"></script>
+<script src="scripts/angular-resource.min.js"></script>
+<script src="scripts/angular-sanitize.min.js"></script>
+<script src="scripts/angular-touch.min.js"></script>
+<script src="scripts/select.min.js"></script>-->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/JsbUtils.js"></script>
+<script src="scripts/admin.js"></script>
+<!--<script src="scripts/DynamoUtils.js"></script>-->
+<script src="scripts/services/dynoclient.js"></script>
+<!--<script src="assets/js/bootstrap.min.js"></script>-->
+<!--<script src="assets/js/scripts.js"></script>-->
+<script src="vendorScripts/ui-bootstrap-tpls-2.5.0.min.js"></script>
+<!-- endbuild -->
+
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>-->
+<!--<script src="assets/js/scripts.js"></script>-->
+</body>
+</html>

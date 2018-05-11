@@ -1,0 +1,145 @@
+<div class="container main skiptables" role="main">
+
+	<div class="title">
+		<h2>Confirma Tus Decisiones</h2>
+		<ul>
+			<li><strong>Nombre del Estudiante:</strong><span>{{student.student_first_name + ' ' + student.student_last_name}}</span></li>
+			<li><strong>Solicitando al Grado:</strong><span>{{student.grade_applied_to}}</span></li>
+		</ul>
+	</div>
+	<div class="instructions">
+		<p>Esta pagina muestra todas las decisiones que tomaste respecto a las ofertas que recibiste y/o, si procede, los programas en donde fuiste colocado en las listas de espera. Para confirmar estas decisiones, haz clic en ‘Aceptar’ abajo, ingresa tus iniciales como indica, y haz clic en ‘Enviar.’ NOTA: Si RECHAZAS una oferta de Matricula Selectiva o No de Matricula Selectiva, o RESCINDES tu posición de una lista de espera, no podrás hacer cambios después de que hayas confirmado tus decisiones y oprimido ‘Enviar’ en la siguiente pagina.</p>
+	</div>
+	<!-- <hr class="clear"></hr> -->
+	<form class="form">
+		<table class="table">
+			<tbody>
+			<tr>
+				<td class="" colspan="6">
+					<div><strong>Aceptado</strong></div>
+				</td>
+			</tr>
+			<tr class="accepted" ng-repeat="accepted in allAccepted()">
+				<td>
+					<strong>{{idToProgram[accepted.School_Program_Code_export].ProgramName}}</strong>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</form>
+
+	<table class="table">
+		<tbody>
+		<tr>
+			<td colspan="6" class="">
+				<strong class="danger">Rechazado</strong>
+			</td>
+		</tr>
+		<tr ng-repeat="declined in allDeclined()">
+			<td><strong>{{idToProgram[declined.School_Program_Code_export].ProgramName}}</strong></td>
+		</tr>
+		<!--<tr>
+			<td><strong>LANE TECH HS - Selective Enrollment</strong></td>
+		</tr>-->
+		</tbody>
+	</table>
+
+	<table class="table" ng-if="allWithdrawn().length > 0">
+		<tbody>
+		<tr>
+			<td colspan="6" class="">
+				<strong class="danger">Listas de Espera Rescindidas</strong>
+			</td>
+		</tr>
+		<tr ng-repeat="withdrawn in allWithdrawn()">
+			<td><strong>{{idToProgram[withdrawn.School_Program_Code_export].ProgramName}}</strong></td>
+		</tr>
+		<!-- <tr>
+			<td><strong>PHILIPS HS - General Education</strong></td>
+		</tr> -->
+		</tbody>
+	</table>
+	<div class="container">
+		<h3>Declaración de Afirmación</h3>
+		<p>Afirmo que toda la información proporcionada en este formulario es verdadera y correcta. Entiendo que si no entrego mi decisión para la fecha y hora indicada en la columna ‘Oferta Expira’ enumerada en la pagina previa, mi hijo perderá el espacio que se le ofrece. Entiendo que una vez que presente mi decisión para la oferta actual, no podre cambiar esa decisión a menos que reciba una oferta de segunda ronda o elijo inscribir en el programa de educación general de mi escuela de vecindario. Entiendo que cualquier estudiante que logre admisión a las escuelas magnet basado en una solicitud falsificada, incluyendo, pero no limitándose a un domicilio falsificado, estará sujeto a expulsión inmediata. Entiendo que cualquier estudiante que logre admisión a las escuelas de Matricula Selectiva basado en una solicitud falsificada, incluyendo, pero no limitándose a un domicilio falsificado, estará sujeto a expulsión inmediata y será permanentemente prohibido de asistir todas las escuelas y programas de Matricula Selectiva.</p>
+	<div class="confirm">
+
+		<form name="myForm" class="form-inline needs-validation" id="confirm" novalidate ng-submit="openConfirmDialog()">
+			<div class="form-row">
+				<div class="col-md-2 ">
+					<div class="checkbox">
+						<input type="checkbox" name="affirm" value="accept_affirmation" id="accept_affirmation" ng-model="confirm" required="required" />
+						<label for="accept_affirmation"><span class="success">Aceptar</span></label>
+					</div>
+
+					<div ng-show="myForm.$submitted && myForm.affirm.$error.required">
+						<div class="invalid-feedback">Tienes que aceptar la declaración de afirmación.</div>
+					</div>
+				</div>
+				<div class="col-md-8 ">
+					<div class="form-group">
+						<label for="name">Ingresa nombre del padre/la madre/el tutor legal</label>
+						<input name="ParentName" type="text" class="form-control" id="name" placeholder="" ng-model="parentName" required="required">
+					</div>
+
+					<div ng-show="myForm.$submitted && myForm.ParentName.$error.required">
+						<div class="invalid-feedback">Debes ingresar un nombre.</div>
+					</div>
+
+
+				</div>
+				<div class="col-md-2 ">
+					<span class="date" id="date">{{ todaysDate | date:'medium' }}</span>
+				</div>
+			</div>
+			<div class="form-row pull-right pagination">
+				<a ng-click="navToSelect()" id="btnprev" class="btn btn-default btn-lg pull-left">Regresar</a>
+				<!--<a id="confirm-submit" class="btn btn-success btn-lg pull-right" ng-click="openConfirmDialog()">Submit</a>-->
+				<input type="submit" id="confirm-submit" class="btn btn-success btn-lg pull-right" value="Enviar" />
+				<!-- <input id="confirm" type="submit" value="Submit" class="btn btn-success btn-lg pull-right"> -->
+			</div>
+		</form>
+
+		<script type="text/ng-template" id="confirmDialog.html">
+			<div class="affirm modal-content">
+				<div class="modal-header">
+					<!-- <h5 class="modal-title" id="exampleModalLongTitle">Parent Information</h5> -->
+					<h4 class="success">¿Estas seguro/a?</h4>
+					<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+					<!-- <span aria-hidden="true">&times;</span> -->
+
+				</div>
+				<div class="modal-body">
+					<p>Al oprimir ‘Enviar’ estas aceptando y/o rechazando los programas indicados, así como estas rescindiendo las listas de espera indicadas. Permanecerás en las listas de espera en donde no rescindiste. Ten en cuenta que si eres residente de la ciudad de Chicago, el programa de educación general en tu secundaria de vecindario sigue siendo una opción si decides mas tarde inscribirte en ese programa.</p>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-success" style="width: 100%; margin-bottom: 10px" ng-click="ok()" ng-disabled="saving">Sí, estoy confirmando estas decisiones.</a>
+					<a class="btn btn-default" style="width: 100%; margin-bottom: 10px" ng-click="cancel()">Regresar a Pagina Anterior</a>
+				</div>
+			</div>
+		</script>
+
+		<script type="text/ng-template" id="final.html">
+			<div class="modal-content">
+				<div class="modal-header">
+					<!-- <h4 class="success">Thank You</h4> -->
+					<h4 class="success">Gracias por entregar tu decisión para el año escolar 2018-2019. Esto confirma que tu decisión fue entregada con éxito.
+
+						Para tus archivos, imprime esta pagina o guárdala en formato PDF como confirmación de tu entrega.
+					</h4>
+					<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+					<!-- <span aria-hidden="true">&times;</span> -->
+				</div>
+				<div class="modal-body">
+					<!--<p>You can now return to the Student Dashboard on the online application site and log out of your account, if you wish. </p>-->
+					<p>Si tienes preguntas, por favor comunícate con la Oficina de Acceso y Matriculación al (773) 553-2060.</p>
+				</div>
+				<div class="modal-footer">
+					<a href="javascript:window.print()" target="_blank" id="print" class="btn btn-default print"><i class="fa fa-print"></i>Imprimir Confirmación</a>
+					<button ng-click="logout()" class="btn btn-primary">Cerrar sesión</button>
+				</div>
+			</div>
+		</script>
+
+	</div>
+</div>

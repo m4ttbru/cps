@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width,initial-scale=1" name="viewport">
+	<title>Chicago Public Schools - Debugging</title>
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!--<link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.min.css">-->
+</head>
+<body ng-app="debugApp" ng-controller="DebugCtrl">
+<div class="container">
+	<h3>Debug Page</h3>
+
+	<div class="row">
+		<div class="col-sm-6">
+			<form role="form" ng-submit="search()">
+				<select class="form-control" ng-model="query.table" ng-options="t as t.name for t in tableOptions" required ng-change="didChangeTable()"></select>
+				<input id="idInput" class="form-control" ng-model="query.id" placeholder="Primary Key" required/>
+				<button type="submit" class="btn btn-primary">Search</button>
+			</form>
+
+			<hr>
+
+			<h4>Results:</h4>
+			<div ng-if="found">
+				<pre>{{found.Item | json}}</pre>
+				<!--<button type="button" ng-click="ssb()" class="btn btn-primary">Do Something Tedious</button>-->
+
+			</div>
+			<pre style="color:red;" ng-if="error">{{error | json}}</pre>
+
+			<hr>
+		</div>
+
+		<div class="col-sm-6">
+			<h4>History
+				<button type="button" ng-click="clearHistory()" class="btn btn-default">Clear</button></h4>
+			<table class="table table-striped table-condensed">
+				<thead>
+				<tr>
+					<th>Time</th>
+					<th>Table</th>
+					<th>Query</th>
+					<th>Status</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="h in history track by h.timestamp">
+					<td>{{h.timestamp | date : 'medium'}}</td>
+					<td>{{h.table}}</td>
+					<td><a ng-click="replay(h)">{{h.id}}</a></td>
+					<td ng-class="{'text-success':h.status=='OK','text-warning':h.status=='Not Found','text-danger':h.status=='Error'}">{{h.status}}</td>
+				</tr>
+				</tbody>
+
+			</table>
+
+		</div>
+
+	</div>
+
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.209.0/aws-sdk.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="scripts/JsbUtils.js"></script>
+<script src="scripts/services/dynoclient.js"></script>
+<script src="scripts/debug.js"></script>
+</body>
+</html>

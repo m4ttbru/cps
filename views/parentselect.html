@@ -1,0 +1,172 @@
+<div class="container main" role="main">
+
+	<div class="title">
+		<h2>Make Your Decisions</h2>
+		<ul>
+			<li><strong>Student's Name:</strong><span>{{student.student_first_name + ' ' + student.student_last_name}}</span></li>
+			<li><strong>Grade Applying To:</strong><span>{{student.grade_applied_to}}</span></li>
+		</ul>
+	</div>
+	<div class="instructions">
+		<p>On this screen you can take actions regarding the offer(s) you received, if applicable, and any programs where you have been waitlisted.</p>
+	</div>
+	<!-- <hr class="clear"></hr> -->
+	<form class="form accept-decline">
+		<table class="table">
+			<tbody>
+			<tr class="nolabel">
+				<td class="full" colspan="6">
+					<div>
+						<h5>Offers</h5>
+						<p>The section below shows all programs/schools from which you have received an offer. If you want to accept an offer, click the ‘Accept’ button next to the school/program of your choice. This will automatically decline your other offers. You can only accept ONE offer. NOTE: If you DECLINE a Non-Selective Enrollment or Selective Enrolment offer, you cannot go back and make any changes once you confirm these decisions and click ‘Submit’ on the following page. You must make your offer decision no later than the time indicated in the ‘Offer Expires’ column below.  If you do not accept any offers by this deadline, your offers will be forfeited (with the exception of the general education program at your neighborhood school, if you have a Chicago address). Upon registration at the school where you accept an offer, you are required to provide proof of the address on your application, as well as your current address, if you moved to another address after you submitted your application. Your offer is contingent upon this proof.</p>
+					</div>
+				</td>
+			</tr>
+			<tr class="light">
+				<td><strong>School Name - Program Name</strong></td>
+				<td>Program Type</td>
+				<td class="col-sm-2">Offer Expires</td>
+				<td>Select either Accept or Decline for each offer.</td>
+			</tr>
+			<tr class="highlight neighborhood" ng-repeat="offer in allOffers"> <!--FIX!!! Don't include neighborhood in class for other applications-->
+				<td>
+					<div class="label">School Name - Program Name</div>
+					<strong>{{idToProgram[offer.School_Program_Code_export].ProgramName}}</strong>
+				</td>
+				<td>
+					<div class="label">Program Type</div>
+					{{offer.application_program_type}}
+				</td>
+				<td>
+					<div class="label">Offer Expires</div>
+					{{offer.OfferExpires | date : 'short'}}</td>
+				<td>
+					<div class="radio-inline">
+						<ul>
+							<li>
+								<input type="radio" name="offer_{{$index}}" id="accept_offer_{{$index}}" value="accept" ng-click="refreshRadioButtons($index)" ng-model="offer.tempStatus">
+								<label class="accept" for="accept_offer_{{$index}}">Accept</label>
+							</li>
+							<li>
+								<input type="radio" name="offer_{{$index}}" id="decline_offer_{{$index}}" value="decline" ng-model="offer.tempStatus">
+								<label class="decline" for="decline_offer_{{$index}}">Decline</label>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<!--<tr class="highlight">
+				<td>
+					<strong>RABY HS - Pre-Law</strong>
+				</td>
+				<td>Non-Selective Enrollment</td>
+				<td>
+					<div class="radio-inline">
+						<ul>
+							<li>
+								<input type="radio" name="offer_2" id="accept_offer_2" value="accept_offer_2">
+								<label class="accept" for="accept_offer_2">Accept</label>
+							</li>
+							<li>
+								<input type="radio" name="offer_2" id="decline_offer_2" value="decline_offer_2" checked>
+								<label class="decline" for="decline_offer_2">Decline</label>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr class="highlight">
+				<td>
+					<strong>LANE TECH HS - Selective Enrollment</strong>
+				</td>
+				<td>Selective Enrollment</td>
+				<td>
+					<div class="radio-inline">
+						<ul>
+							<li>
+								<input type="radio" name="offer_3" id="accept_offer_3" value="accept_offer_3">
+								<label class="accept" for="accept_offer_3">Accept</label>
+							</li>
+							<li>
+								<input type="radio" name="offer_3" id="decline_offer_3" value="decline_offer_3" checked>
+								<label class="decline" for="decline_offer_3">Decline</label>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+			-->
+			</tbody>
+		</table>
+	</form>
+	<form>
+		<table class="table">
+			<tbody>
+			<tr class="nolabel">
+				<td colspan="6" class="full">
+					<h5>Waitlist</h5>
+					<p>The section below shows all programs where you have been waitlisted, and includes your waitlist number and category, if applicable, for each. If you no longer want to be considered for the programs below, click the ‘Withdraw’ button next to the program in order to be removed from the waitlist. NOTE: If you WITHDRAW from a waitlist, you cannot go back and make any changes once you confirm this decision and click ‘Submit’ on the following page. If you want to remain on a program’s waitlist, you will not take any action at this time. If the program has an available seat and your waitlist number is reached, you will be contacted by the school any time after the waitlist process begins. Note that waitlist offers can be extended into the new school year if a seat becomes available.</p>
+				</td>
+			</tr>
+			<tr class="light">
+				<td>School Name - Program Name</td>
+				<td>Category</td>
+				<td>Waitlist Number</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr class="responsive-list-body" ng-repeat="offer in waitlist">
+				<td>
+					<div class="label">School Name - Program Name</div>
+					{{ idToProgram[offer.School_Program_Code_export].ProgramName }}
+				</td>
+				<td>
+					<div class="label">Category</div>
+					{{ offer.Queue_WaitList | na:offer }}
+				</td>
+				<td>
+					<div class="label">Waitlist Number</div>
+					{{ offer.WaitListNumber | na:offer }}
+				</td>
+				<td>
+					<div class="checkbox">
+						<input type="checkbox" id="withdraw_{{$index}}" ng-model="offer.withdraw">
+						<label for="withdraw_{{$index}}"><span class="danger">Withdraw</span></label>
+					</div>
+				</td>
+			</tr>
+			<!--<tr>
+				<td>CURIE - Accounting</td>
+				<td>General</td>
+				<td>46</td>
+				<td>
+					<div class="checkbox">
+						<input type="checkbox" value="withdraw_raby_hs" id="withdraw_curie_hs">
+						<label for="withdraw_curie_hs"><span class="danger">Withdraw</span></label>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>CHICAGO TECH - Stem</td>
+				<td>General</td>
+				<td>72</td>
+				<td>
+					<div class="checkbox">
+						<input type="checkbox" value="withdraw_raby_hs" id="withdraw_chicago_tech">
+						<label for="withdraw_chicago_tech"><span class="danger">Withdraw</span></label>
+					</div>
+				</td>
+			</tr>
+			-->
+			</tbody>
+		</table>
+	</form>
+
+	<div>
+		<div class="pull-right pagination" role="group" aria-label="pagination">
+			<a ng-click="navToEntry()" id="btnprev" class="btn btn-lrg btn-default btn-lg pull-left">Back</a>
+			<a ng-click="navToConfirm()" id="btnnext" class="btn btn-lrg btn-primary btn-lg pull-right">Next</a>
+		</div>
+	</div>
+
+
+</div>

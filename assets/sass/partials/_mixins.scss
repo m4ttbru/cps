@@ -1,0 +1,187 @@
+// mixins ======================================
+
+@mixin sectionpadding {
+	padding: 80px 0;
+	@include breakpoint(xs) { padding: 50px 0; }
+	@include breakpoint(ss) { padding: 30px 0; }
+}
+
+@mixin clear {
+	&:before, &:after {
+		display: block;
+		width: 100%;
+		clear: both;
+		content: '';
+	}
+}
+
+@mixin vertically-center {
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+@mixin centerer($horizontal: true, $vertical: true) {
+	position: absolute;
+	@if ($horizontal and $vertical) {
+		top: 50%;
+		left: 50%;
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+	} @else if ($horizontal) {
+		left: 50%;
+		-webkit-transform: translate(-50%, 0);
+		transform: translate(-50%, 0);
+	} @else if ($vertical) {
+		top: 50%;
+		-webkit-transform: translate(0, -50%);
+		transform: translate(0, -50%);
+	}
+}
+
+@mixin flipH{
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+	filter: FlipH;
+	-ms-filter: "FlipH";
+}
+
+@mixin breakpoint($class) {
+	@if $class == ss { @media (max-width: 500px) { @content; } }
+	@if $class == xs { @media (max-width: 768px) { @content; } }
+	@else if $class == sm { @media (max-width: 768px) { @content; } }
+	@else if $class == md { @media (max-width: 992px) { @content; } }
+	@else if $class == lg { @media (max-width: 1196px) { @content; } }
+	@else if $class == xlg { @media (max-width: 1420px) { @content; } }
+	@else {
+		@warn "Breakpoint mixin supports: xs, sm, md, lg";
+	}
+}
+
+@mixin prefix($property, $value, $vendors: webkit moz ms o) {
+	@if $vendors {
+		@each $vendor in $vendors {
+			#{"-" + $vendor + "-" + $property}: #{$value};
+		}
+	}
+	#{$property}: #{$value};
+}
+
+@mixin checklist(){
+	list-style-type: none;
+	margin: 0; padding: 0;
+	margin-bottom: 20px;
+	li { 
+		position: relative; 
+		padding: 0 10px 0 30px; 
+		line-height: 1.25;
+		margin-bottom: 10px;
+		&:before { @include fa; content: '\f00c'; position: relative; left: 0px; position: absolute; left: 0; top: 2px; } 
+	}
+}
+
+@mixin vertical-gradient($start-color, $start-opacity, $stop-percent, $end-color) {
+	background: $start-color;
+	background: rgba($start-color,0);
+	background: -moz-linear-gradient(top, rgba($start-color,$start-opacity) 0%, rgba($start-color,1) $stop-percent, rgba($end-color,1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba($start-color,$start-opacity)), color-stop($stop-percent, rgba($end-color,1)), color-stop(100%, rgba($end-color,1)));
+	background: -webkit-linear-gradient(top, rgba($start-color,$start-opacity) 0%, rgba($start-color,1) $stop-percent, rgba($end-color,1) 100%);
+	background: -o-linear-gradient(top, rgba($start-color,$start-opacity) 0%, rgba($start-color,1) $stop-percent, rgba($end-color,1) 100%);
+	background: -ms-linear-gradient(top, rgba($start-color,$start-opacity) 0%, rgba($start-color,1) $stop-percent, rgba($end-color,1) 100%);
+	background: linear-gradient(to bottom, rgba($start-color,$start-opacity) 0%, rgba($start-color,1) $stop-percent, rgba($end-color,1) 100%);
+}
+
+@mixin input-placeholder($c, $fw, $ta){
+	&::-webkit-input-placeholder { color: $c; font-weight: $fw; text-align: $ta; }
+	&:-moz-placeholder { color: $c; font-weight: $fw; text-align: $ta; }
+	&::-moz-placeholder { color: $c; font-weight: $fw; text-align: $ta; } //for newer versions of Firefox 
+	&:-ms-input-placeholder { color: $c; font-weight: $fw; text-align: $ta; }
+}
+
+@mixin fa {
+	display: inline-block; margin-right: 12px; font-family: 'fontawesome'; font-weight: normal;
+}
+
+@mixin flexcontainer( $justify : center, $align : center, $align-items : center ){
+
+	display: -webkit-flex;
+	display: -ms-flex;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	-webkit-justify-content: $justify;
+	-ms-flex-pack: $justify;
+	-webkit-align-content: $align;
+	-ms-flex-line-pack: $align;
+	-webkit-align-items: $align-items;
+	-ms-flex-align: $align-items;
+
+	display:         flex;         // flex | inline-flex
+	flex-direction:  row;          // row | row-reverse | column | column-reverse;
+	flex-wrap:       wrap;         // nowrap | wrap | wrap-reverse;
+	justify-content: $justify;     // flex-start | flex-end | center | space-between | space-around | space-evenly;
+	align-content:   $align;       // flex-start | flex-end | center | space-between | space-around | stretch;
+	align-items:     $align-items; // flex-start | flex-end | center | baseline | stretch;
+
+	// https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+}
+
+@mixin flexchild(){
+	-webkit-order: 0;
+	-ms-flex-order: 0;
+	-webkit-align-self: center;
+	-ms-flex-item-align: center;
+	
+	// allows individual flex boxes alignment to be overwritten
+	order: 0;
+	// flex-grow, flex-shrink, flex-basis
+	flex: 0 1 auto;
+	align-self: center; // auto | flex-start | flex-end | center | baseline | stretch;
+}
+
+// order for overrides on flexchild()
+@mixin flexorder($order : 0){
+	-webkit-order: $order;
+	-ms-flex-order: $order;
+	order: $order;
+}
+
+
+// @mixin icon($name: 'home'){
+// 	font-family: 'pahealthcore';
+// 	display: inline-block;
+// 	font-size: 26px;
+// 	color: $secondary;
+
+// 	speak: none;
+// 	font-style: normal;
+// 	font-weight: normal;
+// 	font-variant: normal;
+// 	text-transform: none;
+// 	display: inline-block;
+
+// 	/* Better Font Rendering =========== */
+// 	-webkit-font-smoothing: antialiased;
+// 	-moz-osx-font-smoothing: grayscale;
+	
+// 	$content : map-get((
+// 		'print'    : '\e900',
+// 		'location' : '\e901', 
+// 		'phone'    : '\e902',
+// 		'fax'      : '\e903',
+// 		'person'   : '\e904',
+// 		'email'    : '\e905',
+// 		'web'      : '\e906',
+// 		'twitter'  : '\e907',
+// 		'facebook' : '\e908',
+// 		'youtube'  : '\e909',
+// 		'down'     : '\e90a',
+// 		'home'     : '\e90b',
+// 		'menu'     : '\e90c',
+// 		'plus'     : '\e90d'
+// 	),$name);
+// 	content: $content;
+// }
