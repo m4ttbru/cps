@@ -66,7 +66,7 @@ angular
 	})
 	.constant('AWS_REGION', 'us-east-2')
 	.config(function (dynoClientProvider, AWS_REGION) {
-		if( window.location.href.indexOf('/test/') !== -1 || window.location.href.indexOf('localhost') !== -1 ) {
+		if( window.location.href.indexOf('/test/') !== -1 || window.location.href.indexOf('localhost:') !== -1 ) {
 			prefix = 'test_';
 		} else if( window.location.href.indexOf('/prod/') !== -1 ) {
 			prefix = 'prod_';
