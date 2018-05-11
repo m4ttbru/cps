@@ -65,12 +65,12 @@
 		<table class="table closed table-responsive">
 			<tbody>
 				<tr class="nolabel">
-					<td colspan="6" ng-class="{'full': ! hasNonSelectivePdf() }">
+					<td colspan="8" ng-class="{'full': ! hasNonSelectivePdf() }">
 						<div class="rel">
 							<h5>Matrícula No Selectiva</h5>
-							<p>Si recibiste una oferta de un programa de Matricula No Selectiva a cual solicitaste, veras este programa abajo. Puedes oprimir ‘Ver Estado de Todas Mis Elecciones’ para ver el estado de todas las escuelas en tu solicitud. Si no recibiste una oferta, el estado de todos los programas en tu solicitud se encuentran a continuación. Si solicitaste a programas que seleccionan a estudiantes a través de un sistema de puntos, tus puntuaciones finales para cada programa vigente se pueden encontrar en tu carta de notificación. Para ver estos puntos, oprime ‘Ver e Imprimir Carta de Notificación.’ Esta carta también contiene definiciones de las categorías de las listas de espera. Si deseas recibir esta carta de notificación en español, por favor comunícate con la Oficina de Acceso y Matrícula al 773-553-2060 o <a href="mailto:gocps@cps.edu">gocps@cps.edu</a>. Si no solicitaste a Secundarias No de Matricula Selectiva, esta sección se encuentra en blanco.
-</p>
-							<a ng-if="hasNonSelectivePdf()" ng-href="{{ nonSelectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">Ver e Imprimir <br>Carta de Notificación </a>
+							<p>Si recibiste una oferta de un programa de Matricula No Selectiva a cual solicitaste, veras este programa abajo. Puedes oprimir ‘Ver Estado de Todas Mis Elecciones’ para ver el estado de todas las escuelas en tu solicitud. Si no recibiste una oferta, el estado de todos los programas en tu solicitud se encuentran a continuación. Si solicitaste a programas que seleccionan a estudiantes a través de un sistema de puntos, tus puntuaciones finales para cada programa vigente se pueden encontrar en tu carta de notificación. Para ver estos puntos, oprime ‘Ver e Imprimir Carta de Notificación.’ Esta carta también contiene definiciones de las categorías de las listas de espera. Si deseas recibir esta carta de notificación en español, por favor comunícate con la Oficina de Acceso y Matrícula al 773-553-2060 o <a href="mailto:gocps@cps.edu">gocps@cps.edu</a>. Si no solicitaste a Secundarias No de Matricula Selectiva, esta sección se encuentra en blanco.</p>
+							<a ng-if="hasNonSelectivePdf()" ng-href="{{ nonSelectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">Ver e Imprimir Carta (1a Ronda)</a>
+							<a ng-if="hasNonSelectivePdf()" ng-href="{{ nonSelectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">Ver e Imprimir Carta (2a Ronda)</a>
 						</div>
 					</td>
 				</tr>
@@ -133,7 +133,7 @@
 					<td></td>
 				</tr>-->
 				<tr class="nolabel">
-					<td colspan="6" class="trigger"><span id="toggleNonSelective" data-toggletext="Cerrar Estado">Ver Estado de Todas Mis Elecciones</span></td>
+					<td colspan="8" class="trigger"><span id="toggleNonSelective" data-toggletext="Cerrar Estado">Ver Estado de Todas Mis Elecciones</span></td>
 				</tr>
 			</tbody>
 		</table>
@@ -141,11 +141,12 @@
 		<table class="table closed">
 			<tbody>
 				<tr class="nolabel">
-					<td colspan="6" ng-class="{'full': ! hasSelectivePdf() }"> <!--FIX!!! Change to be based on whether or not there's a PDF-->
+					<td colspan="8" ng-class="{'full': ! hasSelectivePdf() }"> <!--FIX!!! Change to be based on whether or not there's a PDF-->
 						<div class="rel">
 							<h5>Matricula Selectiva</h5>
-							<p>Si recibiste oferta de una de las Secundarias de Matricula Selectiva a cual solicitaste, veras el nombre de esta escuela abajo. Puedes oprimir ‘Ver Estado de Todas Mis Elecciones’ para revisar el estado de todos los programas en tu solicitud. Si no recibiste oferta, el estado de todos los programas en tu solicitud se encuentra a continuación. Los resultados de tu examen de admisión y puntos finales se encuentran en tu carta de notificación: oprime ‘Ver e Imprimir Carta de Notificación.’ Si deseas recibir esta carta de notificación en español, por favor comunícate con la Oficina de Acceso y Matrícula al 773-553-2060 o <a href="mailto:gocps@cps.edu">gocps@cps.edu</a>. Si no solicitaste a las Secundarias de Matricula Selectiva, esta sección se encuentra en blanco.</p>
-							<a ng-if="hasSelectivePdf()" ng-href="{{ selectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">Ver e Imprimir <br>Carta de Notificación </a>
+							<p>Si recibiste oferta de una de las Secundarias de Matricula Selectiva a cual solicitaste, veras el nombre de esta escuela abajo. Puedes oprimir ‘Ver Estado de Todas Mis Elecciones’ para revisar el estado de todos los programas en tu solicitud. Si no recibiste oferta, el estado de todos los programas en tu solicitud se encuentra a continuación. Los resultados de tu examen de admisión y puntos finales se encuentran en tu carta de notificación: oprime ‘Ver e Imprimir Carta de Notificación.’ Si deseas recibir esta carta de notificación en español, por favor comunícate con la Oficina de Acceso y Matrícula al 773-553-2060 o <a href="mailto:gocps@cps.edu">gocps@cps.edu</a>. Si no solicitaste a las Secundarias de Matricula Selectiva, esta sección se encuentra en blanco. Si el estado de su oferta de primera ronda es “perdido”, esto significa que recibió oferta en la segunda ronda. Si el estado de su oferta de primera ronda es “perdido”, esto significa que recibió oferta en la segunda ronda.</p>
+							<a ng-if="hasSelectivePdf()" ng-href="{{ selectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">Ver e Imprimir Carta (1a Ronda)</a>
+							<a ng-if="hasSelectivePdf()" ng-href="{{ selectivePdfHref() }}" class="btn btn-primary btn-lg" target="_blank">Ver e Imprimir Carta (2a Ronda)</a>
 						</div>
 					</td>
 				</tr>
@@ -188,7 +189,7 @@
 					<td><small>n/a</small></td>
 				</tr>-->
 				<tr class="nolabel">
-					<td colspan="6" class="trigger"><span id="toggleSelective" data-toggletext="Cerrar Estado">Ver Estado de Todas Mis Elecciones</span></td>
+					<td colspan="8" class="trigger"><span id="toggleSelective" data-toggletext="Cerrar Estado">Ver Estado de Todas Mis Elecciones</span></td>
 				</tr>
 			</tbody>
 		</table>

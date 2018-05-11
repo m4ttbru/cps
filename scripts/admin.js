@@ -53,7 +53,7 @@ angular
 	} )*/
 	.config(function (dynoClientProvider) {
 
-		if (window.location.href.indexOf('/test/') !== -1) {
+		if (window.location.href.indexOf('/test/') !== -1 || window.location.href.indexOf('localhost:') !== -1) {
 			whichSite = 'test';
 		} else if (window.location.href.indexOf('/prod/') !== -1) {
 			whichSite = 'prod';

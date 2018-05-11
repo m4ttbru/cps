@@ -191,7 +191,11 @@ section.header {
 	padding: 10px 20px;
 	border: 1px solid $primary;
 }
-.btn-lg { padding: 25px 65px; letter-spacing: 1px; }
+.btn-lg { 
+	padding: 25px 65px; 
+	padding: 18px 26px; 
+	letter-spacing: 1px; 
+}
 
 .title { 
 	color: #fff;
@@ -221,6 +225,7 @@ section.header {
 				color: #fff;
 				margin: 0 14px; 
 				padding: 0;
+				@include breakpoint(ss) { display: none; }
 			}
 		}
 	}
@@ -283,6 +288,7 @@ table.table {
 		position: absolute; 
 		top: 30px; 
 		right: 0; 
+		+ .btn-lg { top: 96px; }
 		@include breakpoint(xs) {
 			position: relative;
 			top: auto; right: auto;
@@ -332,11 +338,15 @@ table.table {
 	}
 	// nested tables
 	tbody {
-		td { padding: 20px 35px; }
+		td { padding: 20px 35px; vertical-align: middle; }
 		tr:last-child td:first-child { border-bottom-left-radius: 6px; }
 		tr:last-child td:last-child { border-bottom-right-radius: 6px; }
 		th:last-child { border-radius: 0 6px 0 0; }
 		th:only-child { border-radius: 6px 6px 0 0; }
+		td:not(:first-child):not(:last-child) {
+			padding-left: 12px;
+			padding-right: 12px;
+		}
 	}
 	.table-fixed {
 		border-collapse: collapse;
@@ -544,9 +554,12 @@ table>tbody>tr.hideshow {
 
 	td {
 		padding: 0!important;
+		>div { display: none; padding: 20px 35px; }
+	}
+	td:not(:first-child):not(:last-child) {
 		>div { 
-			display: none; 
-			padding: 20px 35px;
+			padding-left: 12px; 
+			padding-right: 12px; 
 		}
 	}
 
@@ -771,13 +784,23 @@ form .radio-inline {
 }
 [type="checkbox"]:checked + label:before {
 	background-color: $primary;
+	@include breakpoint(ss) {
+		// background-color: #fff;
+	}
 }
 [type="checkbox"]:checked + label:after {
 	content: '✔';
+	content: '\2713';
+	font-weight: bold;
 	color: #fff!important;
 	opacity: 1;
 	-webkit-transform: scale(1);
 	transform: scale(1);
+	@include breakpoint(ss) {
+		// color: $primary!important;
+		font-size: 26px;
+		left: -5px;
+	}
 }
 
 .invalid-feedback {

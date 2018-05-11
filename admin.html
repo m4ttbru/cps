@@ -146,21 +146,23 @@
 				<td class="parent-cell no-border">
 					<table class="ssb-scrollable ssb-fancy pending-offers">
 						<thead>
-						<tr>
-							<th>Student Name</th>
-							<th>Queue</th>
-							<th>Offer Status</th>
-							<th>Offer Expires</th>
-							<th>Type</th>
-							<th>Application Status</th>
-							<th>Notes</th>
-						</tr>
+							<tr>
+								<th>Student Name</th>
+								<th>Round</th>
+								<th>Queue</th>
+								<th>Offer Status</th>
+								<th>Offer Expires</th>
+								<th>Type</th>
+								<th>Application Status</th>
+								<th>Notes</th>
+							</tr>
 						</thead>
 						<tbody>
 						<tr ng-repeat="application in pendingOffers">
 							<td>{{ application.student.student_first_name + ' ' + application.student.student_last_name }}
 								<a ng-click="nameInfoDialog(application)" class="info"><i class="fa fa-info"></i></a>
 							</td>
+							<td>{{ application.OfferRound }}</td>
 							<td>{{ application.Queue_Selections }}</td>
 							<td><a ng-click="makeOffer(application)" class="btn btn-primary full" ng-if="showMakeOffer( application )">Make Offer</a>
 								<div ng-if="! showMakeOffer( application )">{{ application.OfferStatus }}</div>
@@ -223,6 +225,7 @@
 						<thead>
 						<tr>
 							<th>Student Name</th>
+							<th>Round</th>
 							<th>Queue</th>
 							<th>Offer Status</th>
 							<th>Waitlist Number</th>
@@ -234,6 +237,7 @@
 						<tbody>
 						<tr ng-repeat="application in allApplications | filter: searchStudentsByName | orderBy:['student.student_last_name', 'student.student_first_name']">
 							<td>{{ application.student.student_first_name + ' ' + application.student.student_last_name }}<!-- {{ application.OfferStatus }}--></td>
+							<td>{{ application.OfferRound }}</td>
 							<td>{{ application.Queue_Selections }}</td>
 							<td>{{ application.OfferStatus }}</td>
 							<td>{{ application.currentPosition }}</td>
