@@ -75,6 +75,7 @@
 					</td>
 				</tr>
 				<tr class="light">
+					<td width="60">Ronda</td>
 					<td width="60">Clasificación</td>
 					<td>Nombre de Escuela - Nombre de Programa</td>
 					<td>Estado de Oferta</td>
@@ -85,6 +86,7 @@
 				<tr ng-class="offerHighlight(app)"
                     ng-repeat="app in nonSelectiveApplications"
                 >
+					<td><div class="label">Ronda</div>{{app.round}}</td>
 					<td><div class="label">Clasificación</div>{{app.Choice_Rank_export }}</td>
 					<td><div class="label">Nombre de Escuela - Nombre de Programa</div>{{idToProgram[app.School_Program_Code_export].ProgramName}}</td>
 					<td><div class="label">Estado de Oferta</div>{{app.OfferStatus}}</td>
@@ -151,6 +153,7 @@
 					</td>
 				</tr>
 				<tr class="light">
+					<td width="60">Ronda</td>
 					<td width="60">Clasificación</td>
 					<td width="50%">Nombre de Escuela - Nombre de Programa</td>
 					<td width="25%">Estado de Oferta</td>
@@ -159,6 +162,7 @@
 				<tr ng-class="offerHighlight(app)"
                     ng-repeat="app in selectiveApplications"
                 >
+					<td><div class="label">Ronda</div>{{app.round}}</td>
 					<td><div class="label">Clasificación</div>{{app.Choice_Rank_export}}</td>
 					<td><div class="label">Nombre de Escuela - Nombre de Programa</div>{{idToProgram[app.School_Program_Code_export].ProgramName}}</td>
 					<td><div class="label">Estado de Oferta</div>{{app.OfferStatus}}</td>

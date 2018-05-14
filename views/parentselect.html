@@ -23,12 +23,17 @@
 				</td>
 			</tr>
 			<tr class="light">
+				<td>Round</td>
 				<td><strong>School Name - Program Name</strong></td>
 				<td>Program Type</td>
 				<td class="col-sm-2">Offer Expires</td>
 				<td>Select either Accept or Decline for each offer.</td>
 			</tr>
 			<tr class="highlight neighborhood" ng-repeat="offer in allOffers"> <!--FIX!!! Don't include neighborhood in class for other applications-->
+				<td>
+					<div class="label">Round</div>
+					<strong>{{offer.round}}</strong>
+				</td>
 				<td>
 					<div class="label">School Name - Program Name</div>
 					<strong>{{idToProgram[offer.School_Program_Code_export].ProgramName}}</strong>
@@ -109,12 +114,17 @@
 				</td>
 			</tr>
 			<tr class="light">
+				<td>Round</td>
 				<td>School Name - Program Name</td>
 				<td>Category</td>
 				<td>Waitlist Number</td>
 				<td>&nbsp;</td>
 			</tr>
 			<tr class="responsive-list-body" ng-repeat="offer in waitlist">
+				<td>
+					<div class="label">Round</div>
+					<strong>{{offer.round}}</strong>
+				</td>
 				<td>
 					<div class="label">School Name - Program Name</div>
 					{{ idToProgram[offer.School_Program_Code_export].ProgramName }}
